@@ -28,7 +28,6 @@
     margin-bottom: 14px;
   }
 
-  /* Status bar */
   .status-bar {
     display: flex;
     align-items: center;
@@ -40,24 +39,19 @@
     font-size: 0.82rem;
     border: 1px solid #252545;
   }
-  .dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    background: #444;
-    flex-shrink: 0;
-    transition: background 0.3s;
-  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #444; flex-shrink: 0; transition: background 0.3s; }
   .dot.on { background: #2ed573; box-shadow: 0 0 6px #2ed573; }
   #statusTxt { color: #888; }
   #voterUrlBar { margin-left: auto; color: #5555aa; font-size: 0.78rem; }
 
-  /* Grid layout */
+  /* Grid */
   .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 14px;
   }
-  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+  .card.wide { grid-column: 1 / -1; }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } .card.wide { grid-column: 1; } }
 
   /* Cards */
   .card {
@@ -88,215 +82,245 @@
     margin-bottom: 9px;
   }
   .player-row:last-child { margin-bottom: 0; }
-  .swatch {
-    width: 18px; height: 18px;
-    border-radius: 4px;
-    flex-shrink: 0;
-  }
+  .swatch { width: 18px; height: 18px; border-radius: 4px; flex-shrink: 0; }
   .name-input {
-    flex: 1;
-    min-width: 0;
-    background: #1e1e3a;
-    border: 1px solid #30305a;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 7px;
-    font-size: 0.9rem;
-    outline: none;
+    flex: 1; min-width: 0;
+    background: #1e1e3a; border: 1px solid #30305a; color: #fff;
+    padding: 6px 10px; border-radius: 7px; font-size: 0.9rem; outline: none;
     transition: border-color 0.2s;
   }
   .name-input:focus { border-color: #6060cc; }
-  .score-val {
-    font-size: 1.25rem;
-    font-weight: 800;
-    min-width: 36px;
-    text-align: center;
-  }
+  .score-val { font-size: 1.25rem; font-weight: 800; min-width: 36px; text-align: center; }
   .sc-btn {
-    width: 28px; height: 28px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.1rem;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    line-height: 1;
-    transition: transform 0.1s, filter 0.15s;
-    flex-shrink: 0;
+    width: 28px; height: 28px; border: none; border-radius: 50%; cursor: pointer;
+    font-size: 1.1rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; line-height: 1;
+    transition: transform 0.1s, filter 0.15s; flex-shrink: 0;
   }
   .sc-btn:hover { filter: brightness(1.2); }
   .sc-btn:active { transform: scale(0.88); }
   .sc-btn.minus { background: #ff4757; color: #fff; }
   .sc-btn.plus  { background: #2ed573; color: #000; }
-
   .reset-scores-btn {
-    width: 100%;
-    margin-top: 12px;
-    padding: 7px;
-    background: transparent;
-    border: 1px solid #ff4757;
-    color: #ff4757;
-    border-radius: 7px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    transition: background 0.15s;
+    width: 100%; margin-top: 12px; padding: 7px;
+    background: transparent; border: 1px solid #ff4757; color: #ff4757;
+    border-radius: 7px; cursor: pointer; font-size: 0.8rem; transition: background 0.15s;
   }
   .reset-scores-btn:hover { background: rgba(255,71,87,0.1); }
 
-  /* ── Question ── */
-  .q-textarea {
-    width: 100%;
-    background: #0d0d20;
-    border: 1px solid #30305a;
-    color: #fff;
-    padding: 11px 12px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    resize: vertical;
-    min-height: 80px;
-    outline: none;
-    font-family: inherit;
-    margin-bottom: 10px;
-    transition: border-color 0.2s;
-  }
-  .q-textarea:focus { border-color: #6060cc; }
-
   /* ── Timer ── */
-  .presets {
-    display: flex;
-    gap: 7px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-  }
+  .presets { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
   .preset {
-    padding: 5px 13px;
-    background: #1e1e3a;
-    border: 1px solid #30305a;
-    color: #aaa;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.82rem;
-    transition: all 0.15s;
+    padding: 5px 13px; background: #1e1e3a; border: 1px solid #30305a;
+    color: #aaa; border-radius: 6px; cursor: pointer; font-size: 0.82rem; transition: all 0.15s;
   }
   .preset:hover { color: #fff; background: #28284a; }
   .preset.active { background: #4040aa; border-color: #6060cc; color: #fff; }
-
-  .custom-dur {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
+  .custom-dur { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
   .custom-dur input {
-    width: 70px;
-    background: #1e1e3a;
-    border: 1px solid #30305a;
-    color: #fff;
-    padding: 5px 8px;
-    border-radius: 6px;
-    font-size: 0.85rem;
-    outline: none;
-    text-align: center;
+    width: 70px; background: #1e1e3a; border: 1px solid #30305a; color: #fff;
+    padding: 5px 8px; border-radius: 6px; font-size: 0.85rem; outline: none; text-align: center;
   }
   .custom-dur label { font-size: 0.82rem; color: #888; }
-
   .timer-big {
-    font-size: 3rem;
-    font-weight: 900;
-    text-align: center;
-    font-variant-numeric: tabular-nums;
-    letter-spacing: 2px;
-    margin: 10px 0;
-    transition: color 0.3s;
+    font-size: 3rem; font-weight: 900; text-align: center;
+    font-variant-numeric: tabular-nums; letter-spacing: 2px;
+    margin: 10px 0; transition: color 0.3s;
   }
+
+  /* ── Question Queue ── */
+  .on-air-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #0d0d20;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    border: 1px solid #252545;
+    min-height: 44px;
+  }
+  .on-air-badge {
+    font-size: 0.6rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #000;
+    background: #ff4757;
+    padding: 2px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    animation: blink 1.5s step-end infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .on-air-text { flex: 1; font-size: 0.88rem; color: #bbb; font-style: italic; }
+  .on-air-text.set { color: #fff; font-style: normal; font-weight: 600; }
+
+  .q-section-label {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: #4444aa; margin-bottom: 10px;
+  }
+
+  /* Queue list */
+  .q-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .q-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    padding: 10px 10px;
+    background: #0d0d20;
+    border-radius: 9px;
+    border: 1.5px solid transparent;
+    transition: border-color 0.2s;
+  }
+  .q-item.active-q { border-color: #4040aa; background: rgba(64,64,170,0.08); }
+
+  /* Move buttons */
+  .q-move { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; padding-top: 2px; }
+  .q-mv {
+    background: none; border: none; color: #333; cursor: pointer;
+    font-size: 0.7rem; padding: 2px 5px; border-radius: 3px; line-height: 1;
+    transition: color 0.15s, background 0.15s;
+  }
+  .q-mv:hover:not(:disabled) { color: #aaa; background: #1e1e3a; }
+  .q-mv:disabled { opacity: 0.15; cursor: default; }
+
+  /* Text area */
+  .q-text-wrap { flex: 1; min-width: 0; }
+  .q-textarea-item {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #1e1e3a;
+    color: #ddd;
+    font-size: 0.88rem;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    line-height: 1.4;
+    padding: 0 0 4px 0;
+    transition: border-color 0.2s, color 0.2s;
+    overflow: hidden;
+    min-height: 22px;
+  }
+  .q-textarea-item:focus { border-color: #5050aa; color: #fff; }
+  .q-item.active-q .q-textarea-item { color: #fff; font-weight: 600; }
+
+  /* Duration select */
+  .q-dur {
+    background: #1e1e3a; border: 1px solid #30305a; color: #aaa;
+    padding: 4px 6px; border-radius: 6px; font-size: 0.78rem; outline: none;
+    cursor: pointer; flex-shrink: 0; align-self: flex-start; margin-top: 1px;
+    transition: border-color 0.2s;
+  }
+  .q-dur:focus { border-color: #6060cc; }
+
+  /* Use button */
+  .q-use {
+    padding: 5px 11px; background: #2a2a55; color: #aaa;
+    border: 1px solid #3a3a6a; border-radius: 6px;
+    font-size: 0.78rem; font-weight: 700; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0; align-self: flex-start; margin-top: 1px;
+    transition: all 0.15s;
+  }
+  .q-use:hover { background: #4040aa; border-color: #6060cc; color: #fff; }
+  .q-item.active-q .q-use { background: #2ed573; border-color: #2ed573; color: #000; }
+
+  /* Delete button */
+  .q-del {
+    background: none; border: none; color: #333; cursor: pointer;
+    font-size: 0.9rem; padding: 3px 5px; border-radius: 4px; flex-shrink: 0;
+    align-self: flex-start; margin-top: 1px;
+    transition: color 0.15s;
+  }
+  .q-del:hover { color: #ff4757; }
+
+  /* Add question row */
+  .q-add-wrap {
+    background: #0d0d20;
+    border: 1px dashed #2a2a55;
+    border-radius: 9px;
+    padding: 12px;
+  }
+  .q-add-top {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+  .q-add-textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid #30305a;
+    color: #fff;
+    font-size: 0.88rem;
+    font-family: inherit;
+    resize: none;
+    outline: none;
+    padding: 2px 0 6px 0;
+    min-height: 22px;
+    line-height: 1.4;
+  }
+  .q-add-textarea::placeholder { color: #333; }
+  .q-add-textarea:focus { border-color: #6060cc; }
+  .q-add-bottom { display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* Ad-hoc divider */
+  .adhoc-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 16px 0 12px;
+    color: #2a2a55; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+  }
+  .adhoc-divider::before, .adhoc-divider::after {
+    content: ''; flex: 1; height: 1px; background: #1e1e3a;
+  }
+  .q-adhoc-textarea {
+    width: 100%; background: #0d0d20; border: 1px solid #30305a; color: #fff;
+    padding: 10px 12px; border-radius: 8px; font-size: 0.92rem; resize: vertical;
+    min-height: 60px; outline: none; font-family: inherit; margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .q-adhoc-textarea:focus { border-color: #6060cc; }
 
   /* ── Voting ── */
   .vote-status {
-    text-align: center;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 1rem;
-    margin-bottom: 12px;
-    transition: all 0.3s;
+    text-align: center; padding: 8px 14px; border-radius: 8px;
+    font-weight: 700; font-size: 1rem; margin-bottom: 12px; transition: all 0.3s;
   }
   .vote-status.open   { background: rgba(46,213,115,0.12); color: #2ed573; border: 1px solid rgba(46,213,115,0.3); }
   .vote-status.closed { background: rgba(255,71,87,0.10);  color: #ff6b7a; border: 1px solid rgba(255,71,87,0.25); }
-
-  .vote-list {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    margin-bottom: 12px;
-  }
+  .vote-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
   .vote-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 9px 10px;
-    background: #0d0d20;
-    border-radius: 8px;
-    border: 1px solid transparent;
+    display: flex; align-items: center; gap: 8px; padding: 9px 10px;
+    background: #0d0d20; border-radius: 8px; border: 1px solid transparent;
     transition: border-color 0.3s, background 0.3s;
   }
-  .vote-item.winner {
-    background: rgba(46,213,115,0.06);
-    border-color: rgba(46,213,115,0.3);
-  }
+  .vote-item.winner { background: rgba(46,213,115,0.06); border-color: rgba(46,213,115,0.3); }
   .vote-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .vote-name { flex: 1; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .vote-num { font-weight: 800; font-size: 1rem; }
-  .winner-badge {
-    font-size: 0.65rem;
-    font-weight: 700;
-    color: #2ed573;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    display: none;
-  }
+  .winner-badge { font-size: 0.65rem; font-weight: 700; color: #2ed573; letter-spacing: 1px; text-transform: uppercase; display: none; }
   .vote-item.winner .winner-badge { display: inline; }
   .award-btn {
-    padding: 4px 10px;
-    background: #2ed573;
-    color: #000;
-    border: none;
-    border-radius: 5px;
-    font-size: 0.75rem;
-    font-weight: 800;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: filter 0.15s, transform 0.1s;
-    flex-shrink: 0;
+    padding: 4px 10px; background: #2ed573; color: #000; border: none;
+    border-radius: 5px; font-size: 0.75rem; font-weight: 800; cursor: pointer;
+    white-space: nowrap; transition: filter 0.15s, transform 0.1s; flex-shrink: 0;
   }
   .award-btn:hover { filter: brightness(1.1); }
   .award-btn:active { transform: scale(0.94); }
-
-  /* Voter link box */
   .voter-box {
-    margin-top: 12px;
-    padding: 10px 12px;
-    background: #0d0d20;
-    border: 1px dashed #2a2a55;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 0.82rem;
-    color: #5555aa;
-    word-break: break-all;
-    line-height: 1.5;
+    margin-top: 12px; padding: 10px 12px; background: #0d0d20;
+    border: 1px dashed #2a2a55; border-radius: 8px; text-align: center;
+    font-size: 0.82rem; color: #5555aa; word-break: break-all; line-height: 1.5;
   }
   .voter-box strong { display: block; color: #888; font-size: 0.7rem; letter-spacing: 1px; margin-bottom: 3px; text-transform: uppercase; }
 
   /* Buttons */
   .btn-row { display: flex; gap: 9px; }
   .btn {
-    flex: 1;
-    padding: 9px 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 0.88rem;
-    font-weight: 700;
-    transition: filter 0.15s, transform 0.1s;
+    flex: 1; padding: 9px 14px; border: none; border-radius: 8px; cursor: pointer;
+    font-size: 0.88rem; font-weight: 700; transition: filter 0.15s, transform 0.1s;
   }
   .btn:hover  { filter: brightness(1.12); }
   .btn:active { transform: scale(0.96); }
@@ -305,6 +329,9 @@
   .btn-gray   { background: #2a2a48; color: #ccc; }
   .btn-orange { background: #ffa502; color: #000; }
   .btn-blue   { background: #1e90ff; color: #fff; }
+  .btn-purple { background: #7c4dff; color: #fff; }
+
+  .empty-queue { color: #333; font-size: 0.82rem; text-align: center; padding: 16px 0; }
 </style>
 </head>
 <body>
@@ -324,16 +351,6 @@
     <div class="card-title">👥 Players &amp; Scores</div>
     <div id="playersList"></div>
     <button class="reset-scores-btn" onclick="send({type:'RESET_SCORES'})">↺ Reset All Scores to 0</button>
-  </div>
-
-  <!-- ── Question ── -->
-  <div class="card">
-    <div class="card-title">❓ Question</div>
-    <textarea class="q-textarea" id="qInput" placeholder="Type the question here…" rows="3"></textarea>
-    <div class="btn-row">
-      <button class="btn btn-blue"  onclick="setQuestion()">✓ Set Question</button>
-      <button class="btn btn-gray"  onclick="clearQuestion()">✕ Clear</button>
-    </div>
   </div>
 
   <!-- ── Timer ── -->
@@ -359,6 +376,49 @@
     </div>
   </div>
 
+  <!-- ── Question Queue (full width) ── -->
+  <div class="card wide">
+    <div class="card-title">❓ Questions &amp; Queue</div>
+
+    <!-- On-air display -->
+    <div class="on-air-bar">
+      <span class="on-air-badge">ON AIR</span>
+      <span class="on-air-text" id="onAirText">No question set</span>
+      <button class="btn btn-gray" style="flex:none;padding:5px 12px;font-size:0.78rem" onclick="clearQuestion()">✕ Clear</button>
+    </div>
+
+    <!-- Queue list -->
+    <div class="q-section-label">Queue</div>
+    <div class="q-list" id="qList"></div>
+
+    <!-- Add question -->
+    <div class="q-add-wrap">
+      <div class="q-add-top">
+        <textarea class="q-add-textarea" id="qAddText" placeholder="Add a new question to the queue…" rows="2"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();addQuestion();}"></textarea>
+      </div>
+      <div class="q-add-bottom">
+        <select class="q-dur" id="qAddDur">
+          <option value="20">20s</option>
+          <option value="30">30s</option>
+          <option value="45">45s</option>
+          <option value="60" selected>60s</option>
+          <option value="90">90s</option>
+          <option value="120">2m</option>
+        </select>
+        <button class="btn btn-purple" style="flex:none;padding:7px 16px;font-size:0.85rem" onclick="addQuestion()">+ Add to Queue</button>
+      </div>
+    </div>
+
+    <!-- Ad-hoc question -->
+    <div class="adhoc-divider">or set an ad-hoc question</div>
+    <textarea class="q-adhoc-textarea" id="qAdhoc" placeholder="Type a one-off question here…" rows="2"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-blue" onclick="setAdhoc()">✓ Go Live Now</button>
+      <button class="btn btn-gray" onclick="clearQuestion()">✕ Clear</button>
+    </div>
+  </div>
+
   <!-- ── Voting ── -->
   <div class="card">
     <div class="card-title">🗳️ Audience Voting</div>
@@ -368,7 +428,7 @@
       <button class="btn btn-green" id="voteToggleBtn" onclick="toggleVoting()">Open Voting</button>
       <button class="btn btn-gray"  onclick="send({type:'RESET_VOTES'})">↺ New Round</button>
     </div>
-    <div class="voter-box" id="voterBox">
+    <div class="voter-box">
       <strong>Audience Voter URL</strong>
       <span id="voterUrl">—</span>
     </div>
@@ -377,15 +437,146 @@
 </div>
 
 <script>
-let ws = null;
+let ws    = null;
 let state = null;
+let firstState = true;
+let activeQId  = null;   // ID of the question currently on-air from the queue
+
+// ── Question queue (localStorage) ─────────────────────────────────────────────
+function loadQ()  { return JSON.parse(localStorage.getItem('gs_questions') || '[]'); }
+function saveQ(q) { localStorage.setItem('gs_questions', JSON.stringify(q)); }
+
+function genId() { return 'q' + Date.now() + Math.random().toString(36).slice(2,6); }
+
+function addQuestion() {
+  const txt = document.getElementById('qAddText').value.trim();
+  if (!txt) return;
+  const dur = Number(document.getElementById('qAddDur').value);
+  const qs = loadQ();
+  qs.push({ id: genId(), text: txt, duration: dur });
+  saveQ(qs);
+  document.getElementById('qAddText').value = '';
+  renderQueue();
+}
+
+function deleteQuestion(id) {
+  saveQ(loadQ().filter(q => q.id !== id));
+  if (activeQId === id) activeQId = null;
+  renderQueue();
+}
+
+function moveQuestion(id, dir) {
+  const qs = loadQ();
+  const idx = qs.findIndex(q => q.id === id);
+  if (idx < 0) return;
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= qs.length) return;
+  [qs[idx], qs[newIdx]] = [qs[newIdx], qs[idx]];
+  saveQ(qs);
+  renderQueue();
+}
+
+function updateQText(id, text) {
+  const qs = loadQ();
+  const q = qs.find(q => q.id === id);
+  if (q) { q.text = text; saveQ(qs); }
+  // If this is the active question, update on-air too
+  if (id === activeQId) {
+    send({ type: 'SET_QUESTION', question: text });
+  }
+}
+
+function updateQDur(id, dur) {
+  const qs = loadQ();
+  const q = qs.find(q => q.id === id);
+  if (q) { q.duration = dur; saveQ(qs); }
+  // If active, update timer duration too
+  if (id === activeQId) send({ type: 'SET_TIMER_DURATION', duration: dur });
+}
+
+function useQuestion(id) {
+  const q = loadQ().find(q => q.id === id);
+  if (!q) return;
+  activeQId = id;
+  send({ type: 'SET_QUESTION', question: q.text });
+  send({ type: 'SET_TIMER_DURATION', duration: q.duration });
+  renderQueue();
+}
+
+function renderQueue() {
+  const qs = loadQ();
+  const container = document.getElementById('qList');
+  container.innerHTML = '';
+
+  if (qs.length === 0) {
+    container.innerHTML = '<div class="empty-queue">No questions in the queue yet — add one below.</div>';
+    return;
+  }
+
+  qs.forEach((q, idx) => {
+    const isActive = q.id === activeQId;
+    const item = document.createElement('div');
+    item.className = 'q-item' + (isActive ? ' active-q' : '');
+    item.dataset.id = q.id;
+
+    item.innerHTML = `
+      <div class="q-move">
+        <button class="q-mv" onclick="moveQuestion('${q.id}',-1)" ${idx===0?'disabled':''} title="Move up">▲</button>
+        <button class="q-mv" onclick="moveQuestion('${q.id}',1)"  ${idx===qs.length-1?'disabled':''} title="Move down">▼</button>
+      </div>
+      <div class="q-text-wrap">
+        <textarea class="q-textarea-item" rows="1"
+          onblur="updateQText('${q.id}',this.value)"
+          oninput="autoResize(this)"
+        >${escAttr(q.text)}</textarea>
+      </div>
+      <select class="q-dur" onchange="updateQDur('${q.id}',Number(this.value))">
+        <option value="20"  ${q.duration===20?'selected':''}>20s</option>
+        <option value="30"  ${q.duration===30?'selected':''}>30s</option>
+        <option value="45"  ${q.duration===45?'selected':''}>45s</option>
+        <option value="60"  ${q.duration===60?'selected':''}>60s</option>
+        <option value="90"  ${q.duration===90?'selected':''}>90s</option>
+        <option value="120" ${q.duration===120?'selected':''}>2m</option>
+      </select>
+      <button class="q-use" onclick="useQuestion('${q.id}')">${isActive ? '✓ Live' : '▶ Use'}</button>
+      <button class="q-del" onclick="deleteQuestion('${q.id}')" title="Delete">✕</button>
+    `;
+    container.appendChild(item);
+
+    // Auto-resize textarea on render
+    const ta = item.querySelector('.q-textarea-item');
+    requestAnimationFrame(() => autoResize(ta));
+  });
+}
+
+function autoResize(ta) {
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
+}
+
+// ── Name persistence ───────────────────────────────────────────────────────────
+function savePlayerName(i, name) {
+  const names = JSON.parse(localStorage.getItem('gs_names') || '["","","",""]');
+  names[i] = name;
+  localStorage.setItem('gs_names', JSON.stringify(names));
+}
+
+function restoreNames(serverPlayers) {
+  const saved = JSON.parse(localStorage.getItem('gs_names') || 'null');
+  if (!saved) return;
+  serverPlayers.forEach((p, i) => {
+    if (saved[i] && saved[i] !== p.name) {
+      send({ type: 'SET_PLAYER_NAME', index: i, name: saved[i] });
+    }
+  });
+}
 
 // ── WebSocket ──────────────────────────────────────────────────────────────────
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
   ws = new WebSocket(`${proto}//${location.host}`);
-
   ws.onopen = () => {
+    firstState = true;
     document.getElementById('dot').classList.add('on');
     document.getElementById('statusTxt').textContent = 'Connected';
   };
@@ -396,7 +587,10 @@ function connect() {
   };
   ws.onmessage = e => {
     const msg = JSON.parse(e.data);
-    if (msg.type === 'STATE') render(msg.data);
+    if (msg.type === 'STATE') {
+      if (firstState) { firstState = false; restoreNames(msg.data.players); }
+      render(msg.data);
+    }
   };
 }
 
@@ -410,13 +604,11 @@ function render(s) {
 
   // Players
   const list = document.getElementById('playersList');
-  // Re-render only if count changed, otherwise update in place
   if (list.children.length !== 4) {
     list.innerHTML = '';
     s.players.forEach((p, i) => {
       const row = document.createElement('div');
       row.className = 'player-row';
-      row.dataset.i = i;
       row.innerHTML = buildPlayerRow(p, i);
       list.appendChild(row);
     });
@@ -436,32 +628,33 @@ function render(s) {
   const timerEl = document.getElementById('timerBig');
   timerEl.textContent = `${m}:${String(sec).padStart(2,'0')}`;
   timerEl.style.color = rem <= 10 && s.timer.running ? '#ff4757' : rem <= 0 ? '#ff4757' : '#fff';
-
   const spBtn = document.getElementById('startPauseBtn');
-  if (s.timer.running) {
-    spBtn.textContent = '⏸ Pause';
-    spBtn.className = 'btn btn-orange';
-  } else {
-    spBtn.textContent = '▶ Start';
-    spBtn.className = 'btn btn-green';
-  }
-
-  // Preset highlights
+  spBtn.textContent = s.timer.running ? '⏸ Pause' : '▶ Start';
+  spBtn.className   = s.timer.running ? 'btn btn-orange' : 'btn btn-green';
   document.querySelectorAll('.preset').forEach(btn => {
     btn.classList.toggle('active', Number(btn.dataset.s) === s.timer.duration);
   });
+
+  // On-air bar
+  const oat = document.getElementById('onAirText');
+  if (s.question) {
+    oat.textContent = s.question;
+    oat.className = 'on-air-text set';
+  } else {
+    oat.textContent = 'No question set';
+    oat.className = 'on-air-text';
+  }
 
   // Voting
   const vOpen = s.voting.open;
   const vsEl = document.getElementById('voteStatus');
   vsEl.textContent = vOpen
     ? `🟢 Voting Open — ${s.voting.total} vote${s.voting.total !== 1 ? 's' : ''} cast`
-    : `🔴 Voting Closed`;
+    : '🔴 Voting Closed';
   vsEl.className = `vote-status ${vOpen ? 'open' : 'closed'}`;
-
   const vtBtn = document.getElementById('voteToggleBtn');
   vtBtn.textContent = vOpen ? '🔒 Close Voting' : '🗳️ Open Voting';
-  vtBtn.className = vOpen ? 'btn btn-red' : 'btn btn-green';
+  vtBtn.className   = vOpen ? 'btn btn-red' : 'btn btn-green';
 
   const vgEl = document.getElementById('voteGrid');
   vgEl.innerHTML = '';
@@ -494,8 +687,8 @@ function buildPlayerRow(p, i) {
   return `
     <div class="swatch" style="background:${p.color}"></div>
     <input class="name-input" value="${esc(p.name)}"
-      oninput="send({type:'SET_PLAYER_NAME',index:${i},name:this.value})"
-      onchange="send({type:'SET_PLAYER_NAME',index:${i},name:this.value})">
+      oninput="savePlayerName(${i},this.value); send({type:'SET_PLAYER_NAME',index:${i},name:this.value})"
+      onchange="savePlayerName(${i},this.value); send({type:'SET_PLAYER_NAME',index:${i},name:this.value})">
     <button class="sc-btn minus" onclick="send({type:'ADJUST_SCORE',index:${i},delta:-1})">−</button>
     <div class="score-val" style="color:${p.color}">${p.score}</div>
     <button class="sc-btn plus"  onclick="send({type:'ADJUST_SCORE',index:${i},delta:1})">+</button>
@@ -503,29 +696,38 @@ function buildPlayerRow(p, i) {
 }
 
 // ── Actions ────────────────────────────────────────────────────────────────────
-function setQuestion() {
-  send({ type: 'SET_QUESTION', question: document.getElementById('qInput').value });
+function setAdhoc() {
+  const q = document.getElementById('qAdhoc').value.trim();
+  if (!q) return;
+  activeQId = null;
+  send({ type: 'SET_QUESTION', question: q });
+  renderQueue();
 }
+
 function clearQuestion() {
-  document.getElementById('qInput').value = '';
+  document.getElementById('qAdhoc').value = '';
+  activeQId = null;
   send({ type: 'SET_QUESTION', question: '' });
+  renderQueue();
 }
-function setDur(s) { send({ type: 'SET_TIMER_DURATION', duration: s }); }
+
+function setDur(s)     { send({ type: 'SET_TIMER_DURATION', duration: s }); }
 function applyCustom() {
   const v = parseInt(document.getElementById('customSec').value);
   if (v >= 5 && v <= 600) setDur(v);
 }
-function toggleTimer() {
-  send({ type: state?.timer?.running ? 'PAUSE_TIMER' : 'START_TIMER' });
-}
-function toggleVoting() {
-  send({ type: state?.voting?.open ? 'CLOSE_VOTING' : 'OPEN_VOTING' });
-}
+function toggleTimer()  { send({ type: state?.timer?.running ? 'PAUSE_TIMER' : 'START_TIMER' }); }
+function toggleVoting() { send({ type: state?.voting?.open ? 'CLOSE_VOTING' : 'OPEN_VOTING' }); }
 
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function escAttr(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
 
+// ── Init ───────────────────────────────────────────────────────────────────────
+renderQueue();
 connect();
 </script>
 </body>
