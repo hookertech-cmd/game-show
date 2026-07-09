@@ -290,6 +290,56 @@
     100% { box-shadow: none; }
   }
   .vote-pulse { animation: voteGlow 0.9s ease; }
+
+  /* ── Large voting QR panel ── */
+  .vote-qr-panel {
+    position: fixed;
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%) translateX(300px);
+    z-index: 10;
+    background: rgba(8,8,26,0.97);
+    border: 2px solid #2ed573;
+    border-radius: 22px;
+    padding: 20px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s;
+    pointer-events: none;
+  }
+  .vote-qr-panel.show {
+    transform: translateY(-50%) translateX(0);
+    opacity: 1;
+    animation: qrGlow 2.5s ease-in-out infinite;
+  }
+  @keyframes qrGlow {
+    0%, 100% { border-color: #2ed573; box-shadow: 0 0 30px rgba(46,213,115,0.25); }
+    50%       { border-color: #60a5fa; box-shadow: 0 0 50px rgba(96,165,250,0.3); }
+  }
+  .vqr-label {
+    font-size: 0.75rem;
+    font-weight: 900;
+    color: #2ed573;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  #qrLarge canvas, #qrLarge img {
+    width: 200px !important;
+    height: 200px !important;
+    border-radius: 10px;
+    display: block;
+  }
+  .vqr-url {
+    font-size: 0.6rem;
+    color: #444;
+    text-align: center;
+    max-width: 200px;
+    word-break: break-all;
+    line-height: 1.5;
+  }
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
@@ -325,6 +375,13 @@
 <!-- Players -->
 <div class="players" id="players"></div>
 
+<!-- Large QR panel — slides in when voting opens -->
+<div class="vote-qr-panel" id="voteQrPanel">
+  <div class="vqr-label">📱 Scan to Vote</div>
+  <div id="qrLarge"></div>
+  <div class="vqr-url" id="vqrUrl"></div>
+</div>
+
 <script>
 // ── Stars background ──────────────────────────────────────────────────────────
 (function() {
@@ -346,7 +403,10 @@
 })();
 
 // ── QR Code ───────────────────────────────────────────────────────────────────
-const voterURL = `http://${location.hostname}:${location.port}/vote.html`;
+const _port = location.port ? `:${location.port}` : '';
+const voterURL = `${location.protocol}//${location.hostname}${_port}/vote.html`;
+
+// Small header QR
 try {
   new QRCode(document.getElementById('qrEl'), {
     text: voterURL,
@@ -356,6 +416,23 @@ try {
     correctLevel: QRCode.CorrectLevel.M,
   });
 } catch(e) {}
+
+// Large voting panel QR (lazy-init on first open)
+let largeQrDone = false;
+function initLargeQr() {
+  if (largeQrDone) return;
+  largeQrDone = true;
+  try {
+    new QRCode(document.getElementById('qrLarge'), {
+      text: voterURL,
+      width: 200, height: 200,
+      colorDark: '#ffffff',
+      colorLight: '#08081a',
+      correctLevel: QRCode.CorrectLevel.M,
+    });
+    document.getElementById('vqrUrl').textContent = voterURL;
+  } catch(e) {}
+}
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let state = null;
@@ -412,10 +489,13 @@ function update(s) {
     qEl.className = 'q-text empty';
   }
 
-  // Vote banner
+  // Vote banner + large QR panel
   const banner = document.getElementById('voteBanner');
   banner.classList.toggle('show', s.voting.open);
   document.getElementById('qrLabel').className = s.voting.open ? 'qr-label glow' : 'qr-label';
+  const qrPanel = document.getElementById('voteQrPanel');
+  if (s.voting.open) { initLargeQr(); qrPanel.classList.add('show'); }
+  else { qrPanel.classList.remove('show'); }
 
   // Player cards
   const container = document.getElementById('players');

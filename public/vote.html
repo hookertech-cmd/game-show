@@ -22,96 +22,148 @@
   }
 
   .logo {
-    font-size: 1.3rem;
+    font-size: 1.15rem;
     font-weight: 900;
-    letter-spacing: 3px;
-    text-transform: uppercase;
+    letter-spacing: 1px;
     background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
+    line-height: 1.3;
   }
   .sub {
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     color: #333;
     letter-spacing: 2px;
     text-transform: uppercase;
-    margin-bottom: 28px;
+    margin-bottom: 24px;
   }
 
   .prompt {
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 700;
     color: #bbb;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     line-height: 1.4;
   }
 
-  /* Vote buttons */
+  /* ── Player buttons ── */
   .vote-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 13px;
+    gap: 12px;
     width: 100%;
     max-width: 380px;
-    margin-bottom: 22px;
+    margin-bottom: 16px;
   }
 
   .vbtn {
-    padding: 26px 16px;
-    border: none;
+    padding: 28px 16px;
+    border: 3px solid transparent;
     border-radius: 18px;
     font-size: 1.05rem;
     font-weight: 800;
     cursor: pointer;
     letter-spacing: 0.5px;
     position: relative;
-    overflow: hidden;
-    transition: transform 0.15s, filter 0.15s, box-shadow 0.2s;
-    /* color set inline */
+    transition: transform 0.15s, filter 0.15s, box-shadow 0.2s, border-color 0.2s, opacity 0.2s;
   }
-  .vbtn:hover:not(:disabled) {
-    filter: brightness(1.12);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
-  }
-  .vbtn:active:not(:disabled) { transform: scale(0.94); }
   .vbtn:disabled {
-    filter: brightness(0.35) saturate(0.2);
+    filter: brightness(0.3) saturate(0.2);
     cursor: not-allowed;
     transform: none !important;
+    border-color: transparent !important;
   }
-  /* Ripple */
-  .vbtn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0.15);
-    opacity: 0;
-    transition: opacity 0.2s;
-  }
-  .vbtn:hover:not(:disabled)::after { opacity: 1; }
 
-  /* Status messages */
+  /* Unselected state (when something else is selected) */
+  .vbtn.dimmed {
+    filter: brightness(0.45) saturate(0.3);
+    transform: scale(0.96);
+  }
+
+  /* Selected state */
+  .vbtn.selected {
+    border-color: #fff;
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.2), 0 8px 30px rgba(0,0,0,0.5);
+    transform: scale(1.04);
+    filter: brightness(1.1);
+  }
+  .vbtn.selected::after {
+    content: '✓';
+    position: absolute;
+    top: 8px; right: 10px;
+    font-size: 1rem;
+    font-weight: 900;
+    background: rgba(255,255,255,0.9);
+    color: #000;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+  }
+
+  /* Default hover (nothing selected) */
+  .vbtn:not(.selected):not(.dimmed):not(:disabled):hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+  }
+  .vbtn:active:not(:disabled) { transform: scale(0.95) !important; }
+
+  /* ── Submit button ── */
+  .submit-btn {
+    width: 100%;
+    max-width: 380px;
+    padding: 18px;
+    background: #fff;
+    color: #000;
+    border: none;
+    border-radius: 18px;
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.15s, filter 0.15s;
+    display: none;
+    margin-bottom: 12px;
+  }
+  .submit-btn.show { display: block; animation: slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+  }
+  .submit-btn:hover:not(:disabled) { filter: brightness(0.92); transform: translateY(-2px); }
+  .submit-btn:active { transform: scale(0.97) !important; }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+  .change-link {
+    font-size: 0.8rem;
+    color: #444;
+    cursor: pointer;
+    text-decoration: underline;
+    display: none;
+    margin-bottom: 8px;
+  }
+  .change-link.show { display: inline; }
+
+  /* Status */
   .status {
-    min-height: 22px;
-    font-size: 0.9rem;
+    min-height: 20px;
+    font-size: 0.85rem;
     color: #555;
-    margin-bottom: 10px;
     transition: color 0.3s;
   }
-  .status.wait   { color: #555; }
-  .status.active { color: #bbb; }
-  .status.error  { color: #ff4757; }
+  .status.error { color: #ff4757; }
+
+  .closed-note {
+    font-size: 0.9rem;
+    color: #333;
+    margin-top: 6px;
+  }
 
   /* ── Thank-you screen ── */
-  #thankYou {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-  }
+  #thankYou { display: none; flex-direction: column; align-items: center; gap: 14px; }
   #thankYou.show { display: flex; }
   #voteMain.gone { display: none; }
 
@@ -124,41 +176,31 @@
     80%  { transform: scale(1.2) rotate(2deg); }
     100% { transform: scale(1) rotate(0); opacity: 1; }
   }
-
-  .voted-for {
-    font-size: 1.3rem;
-    font-weight: 700;
-  }
+  .voted-for { font-size: 1.2rem; font-weight: 700; line-height: 1.5; }
   .voted-name { font-weight: 900; font-size: 1.5rem; display: block; margin-top: 4px; }
-  .vote-note { color: #444; font-size: 0.85rem; margin-top: 4px; }
-
-  /* Closed overlay text */
-  .closed-note {
-    font-size: 0.85rem;
-    color: #333;
-    margin-top: 6px;
-  }
+  .vote-note { color: #444; font-size: 0.85rem; }
 </style>
 </head>
 <body>
 
-<!-- Voting form -->
 <div id="voteMain">
   <div class="logo">Are You Smarter Than an AI Chat Bot?</div>
   <div class="sub">Audience Vote</div>
 
-  <div class="prompt" id="prompt">Who gave the best answer?</div>
+  <div class="prompt">Who gave the best answer?</div>
 
   <div class="vote-grid" id="voteGrid"></div>
 
-  <div class="status wait" id="statusMsg">Connecting…</div>
-  <div class="closed-note" id="closedNote" style="display:none">Voting is not open yet — stand by.</div>
+  <button class="submit-btn" id="submitBtn" onclick="castVote()">✓ Submit My Vote</button>
+  <span class="change-link" id="changeLink" onclick="clearSelection()">Change selection</span>
+
+  <div class="status" id="statusMsg">Connecting…</div>
+  <div class="closed-note" id="closedNote" style="display:none">⏳ Voting isn't open yet — stand by.</div>
 </div>
 
-<!-- Thank you screen -->
 <div id="thankYou">
   <div class="logo">Are You Smarter Than an AI Chat Bot?</div>
-  <div class="big-icon" id="bigIcon">✅</div>
+  <div class="big-icon">✅</div>
   <div class="voted-for">
     You voted for
     <span class="voted-name" id="votedName">—</span>
@@ -167,45 +209,34 @@
 </div>
 
 <script>
-// ── Voter identity (per browser, resets per round) ────────────────────────────
-function genId() {
-  return Math.random().toString(36).slice(2) + Date.now().toString(36);
-}
+function genId() { return Math.random().toString(36).slice(2) + Date.now().toString(36); }
 function getVoterId() {
   let id = sessionStorage.getItem('gs_voter_id');
   if (!id) { id = genId(); sessionStorage.setItem('gs_voter_id', id); }
   return id;
 }
-
 const VOTER_ID = getVoterId();
-
-// Track which round we've voted in (so "New Round" on host resets our vote)
 let votedRound = Number(sessionStorage.getItem('gs_voted_round') || 0);
 
-let ws   = null;
+let ws = null;
 let state = null;
 let submitting = false;
+let selectedIndex = -1;
 
-const voteMain  = document.getElementById('voteMain');
-const thankYou  = document.getElementById('thankYou');
-const voteGrid  = document.getElementById('voteGrid');
-const statusMsg = document.getElementById('statusMsg');
+const voteMain   = document.getElementById('voteMain');
+const thankYou   = document.getElementById('thankYou');
+const voteGrid   = document.getElementById('voteGrid');
+const statusMsg  = document.getElementById('statusMsg');
 const closedNote = document.getElementById('closedNote');
+const submitBtn  = document.getElementById('submitBtn');
+const changeLink = document.getElementById('changeLink');
 
 // ── WebSocket ─────────────────────────────────────────────────────────────────
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
   ws = new WebSocket(`${proto}//${location.host}`);
-
-  ws.onopen = () => {
-    statusMsg.className = 'status active';
-    statusMsg.textContent = '';
-  };
-  ws.onclose = () => {
-    statusMsg.className = 'status wait';
-    statusMsg.textContent = 'Reconnecting…';
-    setTimeout(connect, 2000);
-  };
+  ws.onopen = () => { statusMsg.textContent = ''; };
+  ws.onclose = () => { statusMsg.textContent = 'Reconnecting…'; setTimeout(connect, 2000); };
   ws.onmessage = e => {
     const msg = JSON.parse(e.data);
     if (msg.type === 'STATE')       renderVote(msg.data);
@@ -213,19 +244,20 @@ function connect() {
   };
 }
 
-// ── Render vote page ──────────────────────────────────────────────────────────
+// ── Render ────────────────────────────────────────────────────────────────────
 function renderVote(s) {
   state = s;
 
-  // If it's a new round, reset our "has voted" state
+  // New round? Reset voted state
   if (s.voting.round > votedRound && votedRound !== 0) {
     votedRound = 0;
     sessionStorage.removeItem('gs_voted_round');
+    selectedIndex = -1;
     voteMain.classList.remove('gone');
     thankYou.classList.remove('show');
   }
 
-  // If we've already voted this round, show thank-you
+  // Already voted this round
   if (votedRound === s.voting.round) {
     voteMain.classList.add('gone');
     thankYou.classList.add('show');
@@ -234,9 +266,10 @@ function renderVote(s) {
 
   const open = s.voting.open;
 
-  // Rebuild buttons if player count changed, else update
+  // Build or update buttons
   if (voteGrid.children.length !== s.players.length) {
     voteGrid.innerHTML = '';
+    selectedIndex = -1;
     s.players.forEach((p, i) => voteGrid.appendChild(makeBtn(p, i, open)));
   } else {
     s.players.forEach((p, i) => {
@@ -246,14 +279,17 @@ function renderVote(s) {
     });
   }
 
+  // If voting just closed while we had a selection, clear it
+  if (!open && selectedIndex !== -1) clearSelection();
+
   if (open) {
-    statusMsg.className = 'status active';
-    statusMsg.textContent = 'Tap a player to cast your vote!';
+    statusMsg.textContent = selectedIndex === -1 ? 'Tap a player to select them.' : '';
     closedNote.style.display = 'none';
   } else {
-    statusMsg.className = 'status wait';
     statusMsg.textContent = '';
     closedNote.style.display = 'block';
+    submitBtn.classList.remove('show');
+    changeLink.classList.remove('show');
   }
 }
 
@@ -261,60 +297,74 @@ function makeBtn(p, i, open) {
   const btn = document.createElement('button');
   btn.className = 'vbtn';
   btn.style.background = p.color;
-  // Dark text for light colors, white for dark
   btn.style.color = isLight(p.color) ? '#000' : '#fff';
   btn.textContent = p.name;
   btn.disabled = !open;
-  btn.addEventListener('click', () => castVote(i));
+  btn.addEventListener('click', () => selectPlayer(i));
   return btn;
 }
 
-// ── Cast vote ─────────────────────────────────────────────────────────────────
-function castVote(playerIndex) {
-  if (!ws || ws.readyState !== WebSocket.OPEN || submitting) return;
+// ── Selection ─────────────────────────────────────────────────────────────────
+function selectPlayer(index) {
+  if (!state?.voting?.open || submitting) return;
+  selectedIndex = index;
+
+  Array.from(voteGrid.children).forEach((btn, i) => {
+    btn.classList.toggle('selected', i === index);
+    btn.classList.toggle('dimmed', i !== index);
+  });
+
+  submitBtn.classList.add('show');
+  changeLink.classList.add('show');
+  statusMsg.textContent = '';
+  statusMsg.className = 'status';
+}
+
+function clearSelection() {
+  selectedIndex = -1;
+  Array.from(voteGrid.children).forEach(btn => {
+    btn.classList.remove('selected', 'dimmed');
+  });
+  submitBtn.classList.remove('show');
+  changeLink.classList.remove('show');
+  statusMsg.textContent = 'Tap a player to select them.';
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+function castVote() {
+  if (selectedIndex === -1 || !ws || ws.readyState !== WebSocket.OPEN || submitting) return;
   if (!state?.voting?.open) return;
   submitting = true;
-  Array.from(voteGrid.children).forEach(b => { b.disabled = true; });
-  statusMsg.textContent = 'Submitting…';
-  ws.send(JSON.stringify({ type: 'VOTE', voterId: VOTER_ID, playerIndex }));
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
+  ws.send(JSON.stringify({ type: 'VOTE', voterId: VOTER_ID, playerIndex: selectedIndex }));
 }
 
 function handleResult(msg) {
   submitting = false;
   if (msg.success) {
     const player = state?.players[msg.playerIndex];
-    const round  = state?.voting?.round;
-
-    // Store voted round so we show thank-you even after reconnect
-    votedRound = round;
-    sessionStorage.setItem('gs_voted_round', round);
-
+    votedRound = state?.voting?.round;
+    sessionStorage.setItem('gs_voted_round', votedRound);
     document.getElementById('votedName').textContent = player?.name || '—';
     document.getElementById('votedName').style.color = player?.color || '#2ed573';
-
     voteMain.classList.add('gone');
     thankYou.classList.add('show');
-
   } else if (msg.message === 'already_voted') {
-    // Edge case: server thinks we already voted (shouldn't normally happen)
     votedRound = state?.voting?.round || 1;
     sessionStorage.setItem('gs_voted_round', votedRound);
     voteMain.classList.add('gone');
     thankYou.classList.add('show');
-    document.getElementById('votedName').textContent = '—';
-
   } else {
+    submitBtn.disabled = false;
+    submitBtn.textContent = '✓ Submit My Vote';
     statusMsg.className = 'status error';
-    statusMsg.textContent = msg.message || 'Something went wrong. Try again.';
-    Array.from(voteGrid.children).forEach(b => { b.disabled = !state?.voting?.open; });
+    statusMsg.textContent = msg.message || 'Something went wrong — try again.';
   }
 }
 
-// ── Utilities ─────────────────────────────────────────────────────────────────
 function isLight(hex) {
-  const r = parseInt(hex.slice(1,3),16);
-  const g = parseInt(hex.slice(3,5),16);
-  const b = parseInt(hex.slice(5,7),16);
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
   return (r*299 + g*587 + b*114) / 1000 > 145;
 }
 

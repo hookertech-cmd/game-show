@@ -223,9 +223,9 @@
   .vote-status.open   { background: rgba(46,213,115,0.12); color: #2ed573; border: 1px solid rgba(46,213,115,0.3); }
   .vote-status.closed { background: rgba(255,71,87,0.10);  color: #ff6b7a; border: 1px solid rgba(255,71,87,0.25); }
 
-  .vote-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+  .vote-list {
+    display: flex;
+    flex-direction: column;
     gap: 7px;
     margin-bottom: 12px;
   }
@@ -233,13 +233,43 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 10px;
+    padding: 9px 10px;
     background: #0d0d20;
-    border-radius: 7px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .vote-item.winner {
+    background: rgba(46,213,115,0.06);
+    border-color: rgba(46,213,115,0.3);
   }
   .vote-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
   .vote-name { flex: 1; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .vote-num { font-weight: 800; font-size: 1.05rem; }
+  .vote-num { font-weight: 800; font-size: 1rem; }
+  .winner-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #2ed573;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    display: none;
+  }
+  .vote-item.winner .winner-badge { display: inline; }
+  .award-btn {
+    padding: 4px 10px;
+    background: #2ed573;
+    color: #000;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: filter 0.15s, transform 0.1s;
+    flex-shrink: 0;
+  }
+  .award-btn:hover { filter: brightness(1.1); }
+  .award-btn:active { transform: scale(0.94); }
 
   /* Voter link box */
   .voter-box {
@@ -333,7 +363,7 @@
   <div class="card">
     <div class="card-title">🗳️ Audience Voting</div>
     <div class="vote-status closed" id="voteStatus">Voting Closed</div>
-    <div class="vote-grid" id="voteGrid"></div>
+    <div class="vote-list" id="voteGrid"></div>
     <div class="btn-row">
       <button class="btn btn-green" id="voteToggleBtn" onclick="toggleVoting()">Open Voting</button>
       <button class="btn btn-gray"  onclick="send({type:'RESET_VOTES'})">↺ New Round</button>
@@ -436,20 +466,26 @@ function render(s) {
   const vgEl = document.getElementById('voteGrid');
   vgEl.innerHTML = '';
   const total = s.voting.total || 0;
+  const maxVotes = Math.max(...s.voting.votes);
   s.players.forEach((p, i) => {
-    const pct = total > 0 ? Math.round((s.voting.votes[i] / total) * 100) : 0;
+    const votes = s.voting.votes[i];
+    const pct = total > 0 ? Math.round((votes / total) * 100) : 0;
+    const isWinner = votes > 0 && votes === maxVotes;
     const item = document.createElement('div');
-    item.className = 'vote-item';
+    item.className = `vote-item${isWinner ? ' winner' : ''}`;
     item.innerHTML = `
       <div class="vote-dot" style="background:${p.color}"></div>
-      <span class="vote-name">${esc(p.name)}</span>
-      <span class="vote-num" style="color:${p.color}">${s.voting.votes[i]}<span style="font-size:0.65rem;font-weight:400;color:#666"> (${pct}%)</span></span>
+      <span class="vote-name" style="color:${p.color};font-weight:700">${esc(p.name)}</span>
+      <span class="winner-badge">🏆 LEADING</span>
+      <span class="vote-num" style="color:${p.color}">${votes}<span style="font-size:0.65rem;font-weight:400;color:#555"> (${pct}%)</span></span>
+      <button class="award-btn" onclick="send({type:'ADJUST_SCORE',index:${i},delta:1})">+1 pt</button>
     `;
     vgEl.appendChild(item);
   });
 
   // Voter URL
-  const url = `http://${location.hostname}:${location.port}/vote.html`;
+  const _p = location.port ? `:${location.port}` : '';
+  const url = `${location.protocol}//${location.hostname}${_p}/vote.html`;
   document.getElementById('voterUrl').textContent = url;
   document.getElementById('voterUrlBar').textContent = `Voter: ${url}`;
 }
