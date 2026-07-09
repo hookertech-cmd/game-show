@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Are You Smarter Than an AI Chat Bot – Display</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #08081a;
+    color: #fff;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* ── Animated background stars ── */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d, 4s) ease-in-out infinite;
+    opacity: 0;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0; }
+    50% { opacity: var(--o, 0.4); }
+  }
+
+  /* ── Header ── */
+  .header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, rgba(20,20,50,0.95), rgba(8,8,26,0.95));
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    backdrop-filter: blur(4px);
+  }
+
+  .game-title {
+    font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399, #fbbf24);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    background-size: 200%;
+    animation: shimmer 4s linear infinite;
+  }
+  @keyframes shimmer {
+    0% { background-position: 0% }
+    100% { background-position: 200% }
+  }
+
+  /* Timer section */
+  .timer-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .timer-num {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 900;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    transition: color 0.4s;
+    line-height: 1;
+    text-shadow: 0 0 24px currentColor;
+  }
+  .timer-num.white  { color: #fff; }
+  .timer-num.yellow { color: #fbbf24; }
+  .timer-num.red    { color: #ff4757; animation: pulse-timer 0.6s ease-in-out infinite alternate; }
+  @keyframes pulse-timer {
+    from { text-shadow: 0 0 10px #ff4757; }
+    to   { text-shadow: 0 0 40px #ff4757, 0 0 70px #ff4757aa; }
+  }
+  .timer-track {
+    width: clamp(80px, 12vw, 150px);
+    height: 5px;
+    background: #1a1a35;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .timer-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s linear, background 0.4s;
+  }
+
+  /* QR code section */
+  .qr-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .qr-label {
+    font-size: 0.6rem;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: color 0.4s;
+  }
+  .qr-label.glow { color: #2ed573; text-shadow: 0 0 8px #2ed573; }
+  #qrEl canvas, #qrEl img {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 5px;
+    display: block;
+  }
+
+  /* ── Main content ── */
+  .main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 5vw;
+  }
+
+  /* Voting open banner */
+  .vote-banner {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: linear-gradient(135deg, #2ed573, #00c8ff);
+    color: #000;
+    font-weight: 900;
+    font-size: clamp(0.7rem, 1.4vw, 1rem);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px 24px;
+    border-radius: 40px;
+    white-space: nowrap;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .vote-banner.show {
+    transform: translateX(-50%) translateY(0);
+    animation: float 2.5s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50%       { transform: translateX(-50%) translateY(-6px); }
+  }
+
+  .q-label {
+    font-size: 0.7rem;
+    color: #333;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+  }
+  .q-text {
+    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    text-align: center;
+    line-height: 1.35;
+    max-width: 880px;
+    transition: opacity 0.4s;
+    color: #f0f0ff;
+    text-shadow: 0 2px 30px rgba(180,180,255,0.15);
+  }
+  .q-text.empty { color: #252540; font-style: italic; font-size: clamp(1rem, 2vw, 1.6rem); font-weight: 400; }
+
+  /* ── Players section ── */
+  .players {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px 16px 16px;
+  }
+
+  .p-card {
+    background: #0e0e24;
+    border-radius: 16px;
+    border: 1.5px solid rgba(255,255,255,0.05);
+    padding: 14px 14px 12px;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.3s, border-color 0.3s;
+  }
+  .p-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .p-name {
+    font-size: clamp(0.85rem, 1.8vw, 1.3rem);
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+  }
+  .p-pts-label {
+    font-size: 0.58rem;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+  }
+  .p-score {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 10px;
+    transition: transform 0.2s;
+  }
+
+  /* Vote bar */
+  .v-bar-track {
+    height: 5px;
+    background: #1a1a35;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .v-bar-track.show { opacity: 1; }
+  .v-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+  }
+  .v-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    color: #555;
+    opacity: 0;
+    transition: opacity 0.5s;
+  }
+  .v-info.show { opacity: 1; }
+
+  /* Vote badge (top-right of card) */
+  .v-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(255,255,255,0.08);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .v-badge.show { opacity: 1; }
+
+  /* Score bump animation */
+  @keyframes scoreBump {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+  .bump { animation: scoreBump 0.35s ease; }
+
+  /* Vote glow pulse */
+  @keyframes voteGlow {
+    0%   { box-shadow: none; }
+    40%  { box-shadow: 0 0 40px var(--glow), 0 0 80px var(--glow-dim); }
+    100% { box-shadow: none; }
+  }
+  .vote-pulse { animation: voteGlow 0.9s ease; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+<!-- Starfield -->
+<div class="stars" id="stars"></div>
+
+<!-- Header -->
+<div class="header">
+  <div class="game-title">Are You Smarter Than an AI Chat Bot?</div>
+
+  <div class="timer-wrap">
+    <div class="timer-num white" id="timerNum">—</div>
+    <div class="timer-track">
+      <div class="timer-fill" id="timerFill" style="width:100%;background:#2ed573"></div>
+    </div>
+  </div>
+
+  <div class="qr-wrap">
+    <div class="qr-label" id="qrLabel">Scan to Vote</div>
+    <div id="qrEl"></div>
+  </div>
+</div>
+
+<!-- Question area -->
+<div class="main">
+  <div class="vote-banner" id="voteBanner">🗳️ Voting Open — Scan to Vote!</div>
+  <div class="q-label">Current Question</div>
+  <div class="q-text empty" id="qText">Waiting for question…</div>
+</div>
+
+<!-- Players -->
+<div class="players" id="players"></div>
+
+<script>
+// ── Stars background ──────────────────────────────────────────────────────────
+(function() {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2 + 1;
+    s.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      --d:${(Math.random()*5+2).toFixed(1)}s;
+      --o:${(Math.random()*0.4+0.1).toFixed(2)};
+      animation-delay:${(Math.random()*6).toFixed(1)}s;
+    `;
+    c.appendChild(s);
+  }
+})();
+
+// ── QR Code ───────────────────────────────────────────────────────────────────
+const voterURL = `http://${location.hostname}:${location.port}/vote.html`;
+try {
+  new QRCode(document.getElementById('qrEl'), {
+    text: voterURL,
+    width: 58, height: 58,
+    colorDark: '#ffffff',
+    colorLight: '#08081a',
+    correctLevel: QRCode.CorrectLevel.M,
+  });
+} catch(e) {}
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let state = null;
+let prevVotes = [0,0,0,0];
+let prevScores = [0,0,0,0];
+let ws = null;
+
+// ── WebSocket ─────────────────────────────────────────────────────────────────
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}`);
+  ws.onmessage = e => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'STATE') update(msg.data);
+  };
+  ws.onclose = () => setTimeout(connect, 2000);
+}
+
+// ── Update display ────────────────────────────────────────────────────────────
+function update(s) {
+  const scoreChanged = state && s.players.some((p,i) => p.score !== state.players[i]?.score);
+  const voteChanged  = state && s.voting.votes.some((v,i) => v !== state.voting.votes[i]);
+  state = s;
+
+  // Timer
+  const rem = s.timer.remaining;
+  const dur = s.timer.duration;
+  const m = Math.floor(rem/60), sec = rem % 60;
+  const tEl = document.getElementById('timerNum');
+  tEl.textContent = `${m}:${String(sec).padStart(2,'0')}`;
+  if (!s.timer.running && rem === dur) {
+    tEl.className = 'timer-num white';
+  } else if (rem <= 0) {
+    tEl.className = 'timer-num red';
+  } else if (rem <= 10) {
+    tEl.className = 'timer-num red';
+  } else if (rem <= 20) {
+    tEl.className = 'timer-num yellow';
+  } else {
+    tEl.className = 'timer-num white';
+  }
+  const pct = dur > 0 ? (rem / dur) * 100 : 100;
+  const fill = document.getElementById('timerFill');
+  fill.style.width = pct + '%';
+  fill.style.background = rem <= 10 ? '#ff4757' : rem <= 20 ? '#fbbf24' : '#2ed573';
+
+  // Question
+  const qEl = document.getElementById('qText');
+  if (s.question) {
+    qEl.textContent = s.question;
+    qEl.className = 'q-text';
+  } else {
+    qEl.textContent = 'Waiting for question…';
+    qEl.className = 'q-text empty';
+  }
+
+  // Vote banner
+  const banner = document.getElementById('voteBanner');
+  banner.classList.toggle('show', s.voting.open);
+  document.getElementById('qrLabel').className = s.voting.open ? 'qr-label glow' : 'qr-label';
+
+  // Player cards
+  const container = document.getElementById('players');
+  if (container.children.length !== 4) {
+    container.innerHTML = '';
+    s.players.forEach((p, i) => container.appendChild(buildCard(p, i, s)));
+  } else {
+    s.players.forEach((p, i) => {
+      updateCard(container.children[i], p, i, s, voteChanged, scoreChanged);
+    });
+  }
+
+  prevVotes  = [...s.voting.votes];
+  prevScores = s.players.map(p => p.score);
+}
+
+function buildCard(p, i, s) {
+  const card = document.createElement('div');
+  card.className = 'p-card';
+  card.style.setProperty('--glow',     p.color);
+  card.style.setProperty('--glow-dim', p.color + '44');
+  const total = s.voting.total || 0;
+  const votes = s.voting.votes[i];
+  const pct   = total > 0 ? Math.round((votes/total)*100) : 0;
+  const show  = s.voting.open || votes > 0;
+  card.innerHTML = `
+    <div style="position:absolute;top:0;left:0;right:0;height:3px;background:${p.color};border-radius:16px 16px 0 0"></div>
+    <div class="v-badge${show?' show':''}" style="color:${p.color}">${votes}</div>
+    <div class="p-name"  style="color:${p.color}">${esc(p.name)}</div>
+    <div class="p-pts-label">Points</div>
+    <div class="p-score" style="color:${p.color}">${p.score}</div>
+    <div class="v-bar-track${show?' show':''}">
+      <div class="v-bar-fill" style="background:${p.color};width:${pct}%"></div>
+    </div>
+    <div class="v-info${show?' show':''}">
+      <span>${votes} vote${votes!==1?'s':''}</span><span>${pct}%</span>
+    </div>
+  `;
+  return card;
+}
+
+function updateCard(card, p, i, s, voteChanged, scoreChanged) {
+  const total = s.voting.total || 0;
+  const votes = s.voting.votes[i];
+  const pct   = total > 0 ? Math.round((votes/total)*100) : 0;
+  const show  = s.voting.open || votes > 0;
+
+  card.querySelector('.p-name').textContent = p.name;
+
+  const scoreEl = card.querySelector('.p-score');
+  scoreEl.textContent = p.score;
+  if (scoreChanged && p.score !== prevScores[i]) {
+    scoreEl.classList.remove('bump');
+    void scoreEl.offsetWidth;
+    scoreEl.classList.add('bump');
+  }
+
+  const badge = card.querySelector('.v-badge');
+  badge.textContent = votes;
+  badge.classList.toggle('show', show);
+
+  const track = card.querySelector('.v-bar-track');
+  track.classList.toggle('show', show);
+  card.querySelector('.v-bar-fill').style.width = pct + '%';
+
+  const info = card.querySelector('.v-info');
+  info.classList.toggle('show', show);
+  const spans = info.querySelectorAll('span');
+  spans[0].textContent = `${votes} vote${votes!==1?'s':''}`;
+  spans[1].textContent = `${pct}%`;
+
+  if (voteChanged && votes > (prevVotes[i] || 0)) {
+    card.classList.remove('vote-pulse');
+    void card.offsetWidth;
+    card.classList.add('vote-pulse');
+  }
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+connect();
+</script>
+</body>
+</html>

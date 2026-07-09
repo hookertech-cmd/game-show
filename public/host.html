@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Host Panel – Are You Smarter Than an AI Chat Bot</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0d0d20;
+    color: #e0e0f0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    padding: 18px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 14px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    background: #16162e;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.82rem;
+    border: 1px solid #252545;
+  }
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #444;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .dot.on { background: #2ed573; box-shadow: 0 0 6px #2ed573; }
+  #statusTxt { color: #888; }
+  #voterUrlBar { margin-left: auto; color: #5555aa; font-size: 0.78rem; }
+
+  /* Grid layout */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  @media (max-width: 680px) { .grid { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .card {
+    background: #16162e;
+    border: 1px solid #252545;
+    border-radius: 14px;
+    padding: 18px;
+  }
+  .card-title {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #6666aa;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #252545;
+  }
+
+  /* ── Players ── */
+  .player-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 10px;
+    background: #0d0d20;
+    border-radius: 9px;
+    margin-bottom: 9px;
+  }
+  .player-row:last-child { margin-bottom: 0; }
+  .swatch {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+  .name-input {
+    flex: 1;
+    min-width: 0;
+    background: #1e1e3a;
+    border: 1px solid #30305a;
+    color: #fff;
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .name-input:focus { border-color: #6060cc; }
+  .score-val {
+    font-size: 1.25rem;
+    font-weight: 800;
+    min-width: 36px;
+    text-align: center;
+  }
+  .sc-btn {
+    width: 28px; height: 28px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    line-height: 1;
+    transition: transform 0.1s, filter 0.15s;
+    flex-shrink: 0;
+  }
+  .sc-btn:hover { filter: brightness(1.2); }
+  .sc-btn:active { transform: scale(0.88); }
+  .sc-btn.minus { background: #ff4757; color: #fff; }
+  .sc-btn.plus  { background: #2ed573; color: #000; }
+
+  .reset-scores-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 7px;
+    background: transparent;
+    border: 1px solid #ff4757;
+    color: #ff4757;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: background 0.15s;
+  }
+  .reset-scores-btn:hover { background: rgba(255,71,87,0.1); }
+
+  /* ── Question ── */
+  .q-textarea {
+    width: 100%;
+    background: #0d0d20;
+    border: 1px solid #30305a;
+    color: #fff;
+    padding: 11px 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    font-family: inherit;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .q-textarea:focus { border-color: #6060cc; }
+
+  /* ── Timer ── */
+  .presets {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .preset {
+    padding: 5px 13px;
+    background: #1e1e3a;
+    border: 1px solid #30305a;
+    color: #aaa;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    transition: all 0.15s;
+  }
+  .preset:hover { color: #fff; background: #28284a; }
+  .preset.active { background: #4040aa; border-color: #6060cc; color: #fff; }
+
+  .custom-dur {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .custom-dur input {
+    width: 70px;
+    background: #1e1e3a;
+    border: 1px solid #30305a;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    outline: none;
+    text-align: center;
+  }
+  .custom-dur label { font-size: 0.82rem; color: #888; }
+
+  .timer-big {
+    font-size: 3rem;
+    font-weight: 900;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    margin: 10px 0;
+    transition: color 0.3s;
+  }
+
+  /* ── Voting ── */
+  .vote-status {
+    text-align: center;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 12px;
+    transition: all 0.3s;
+  }
+  .vote-status.open   { background: rgba(46,213,115,0.12); color: #2ed573; border: 1px solid rgba(46,213,115,0.3); }
+  .vote-status.closed { background: rgba(255,71,87,0.10);  color: #ff6b7a; border: 1px solid rgba(255,71,87,0.25); }
+
+  .vote-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 7px;
+    margin-bottom: 12px;
+  }
+  .vote-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: #0d0d20;
+    border-radius: 7px;
+  }
+  .vote-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .vote-name { flex: 1; font-size: 0.82rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .vote-num { font-weight: 800; font-size: 1.05rem; }
+
+  /* Voter link box */
+  .voter-box {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #0d0d20;
+    border: 1px dashed #2a2a55;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #5555aa;
+    word-break: break-all;
+    line-height: 1.5;
+  }
+  .voter-box strong { display: block; color: #888; font-size: 0.7rem; letter-spacing: 1px; margin-bottom: 3px; text-transform: uppercase; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 9px; }
+  .btn {
+    flex: 1;
+    padding: 9px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 700;
+    transition: filter 0.15s, transform 0.1s;
+  }
+  .btn:hover  { filter: brightness(1.12); }
+  .btn:active { transform: scale(0.96); }
+  .btn-green  { background: #2ed573; color: #000; }
+  .btn-red    { background: #ff4757; color: #fff; }
+  .btn-gray   { background: #2a2a48; color: #ccc; }
+  .btn-orange { background: #ffa502; color: #000; }
+  .btn-blue   { background: #1e90ff; color: #fff; }
+</style>
+</head>
+<body>
+
+<h1>Are You Smarter Than an AI Chat Bot? — Host</h1>
+
+<div class="status-bar">
+  <div class="dot" id="dot"></div>
+  <span id="statusTxt">Connecting…</span>
+  <span id="voterUrlBar"></span>
+</div>
+
+<div class="grid">
+
+  <!-- ── Players ── -->
+  <div class="card">
+    <div class="card-title">👥 Players &amp; Scores</div>
+    <div id="playersList"></div>
+    <button class="reset-scores-btn" onclick="send({type:'RESET_SCORES'})">↺ Reset All Scores to 0</button>
+  </div>
+
+  <!-- ── Question ── -->
+  <div class="card">
+    <div class="card-title">❓ Question</div>
+    <textarea class="q-textarea" id="qInput" placeholder="Type the question here…" rows="3"></textarea>
+    <div class="btn-row">
+      <button class="btn btn-blue"  onclick="setQuestion()">✓ Set Question</button>
+      <button class="btn btn-gray"  onclick="clearQuestion()">✕ Clear</button>
+    </div>
+  </div>
+
+  <!-- ── Timer ── -->
+  <div class="card">
+    <div class="card-title">⏱️ Timer</div>
+    <div class="presets" id="presets">
+      <button class="preset" data-s="20"  onclick="setDur(20)">20s</button>
+      <button class="preset" data-s="30"  onclick="setDur(30)">30s</button>
+      <button class="preset" data-s="45"  onclick="setDur(45)">45s</button>
+      <button class="preset active" data-s="60" onclick="setDur(60)">60s</button>
+      <button class="preset" data-s="90"  onclick="setDur(90)">90s</button>
+      <button class="preset" data-s="120" onclick="setDur(120)">2m</button>
+    </div>
+    <div class="custom-dur">
+      <label>Custom:</label>
+      <input type="number" id="customSec" min="5" max="600" placeholder="sec">
+      <button class="btn btn-gray" style="flex:none;padding:5px 10px;font-size:0.8rem" onclick="applyCustom()">Set</button>
+    </div>
+    <div class="timer-big" id="timerBig">1:00</div>
+    <div class="btn-row">
+      <button class="btn btn-green" id="startPauseBtn" onclick="toggleTimer()">▶ Start</button>
+      <button class="btn btn-gray"  onclick="send({type:'RESET_TIMER'})">↺ Reset</button>
+    </div>
+  </div>
+
+  <!-- ── Voting ── -->
+  <div class="card">
+    <div class="card-title">🗳️ Audience Voting</div>
+    <div class="vote-status closed" id="voteStatus">Voting Closed</div>
+    <div class="vote-grid" id="voteGrid"></div>
+    <div class="btn-row">
+      <button class="btn btn-green" id="voteToggleBtn" onclick="toggleVoting()">Open Voting</button>
+      <button class="btn btn-gray"  onclick="send({type:'RESET_VOTES'})">↺ New Round</button>
+    </div>
+    <div class="voter-box" id="voterBox">
+      <strong>Audience Voter URL</strong>
+      <span id="voterUrl">—</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let ws = null;
+let state = null;
+
+// ── WebSocket ──────────────────────────────────────────────────────────────────
+function connect() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${proto}//${location.host}`);
+
+  ws.onopen = () => {
+    document.getElementById('dot').classList.add('on');
+    document.getElementById('statusTxt').textContent = 'Connected';
+  };
+  ws.onclose = () => {
+    document.getElementById('dot').classList.remove('on');
+    document.getElementById('statusTxt').textContent = 'Disconnected — reconnecting…';
+    setTimeout(connect, 2000);
+  };
+  ws.onmessage = e => {
+    const msg = JSON.parse(e.data);
+    if (msg.type === 'STATE') render(msg.data);
+  };
+}
+
+function send(data) {
+  if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(data));
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────────
+function render(s) {
+  state = s;
+
+  // Players
+  const list = document.getElementById('playersList');
+  // Re-render only if count changed, otherwise update in place
+  if (list.children.length !== 4) {
+    list.innerHTML = '';
+    s.players.forEach((p, i) => {
+      const row = document.createElement('div');
+      row.className = 'player-row';
+      row.dataset.i = i;
+      row.innerHTML = buildPlayerRow(p, i);
+      list.appendChild(row);
+    });
+  } else {
+    s.players.forEach((p, i) => {
+      const row = list.children[i];
+      const inp = row.querySelector('.name-input');
+      if (document.activeElement !== inp) inp.value = p.name;
+      row.querySelector('.score-val').textContent = p.score;
+      row.querySelector('.score-val').style.color = p.color;
+    });
+  }
+
+  // Timer
+  const rem = s.timer.remaining;
+  const m = Math.floor(rem / 60), sec = rem % 60;
+  const timerEl = document.getElementById('timerBig');
+  timerEl.textContent = `${m}:${String(sec).padStart(2,'0')}`;
+  timerEl.style.color = rem <= 10 && s.timer.running ? '#ff4757' : rem <= 0 ? '#ff4757' : '#fff';
+
+  const spBtn = document.getElementById('startPauseBtn');
+  if (s.timer.running) {
+    spBtn.textContent = '⏸ Pause';
+    spBtn.className = 'btn btn-orange';
+  } else {
+    spBtn.textContent = '▶ Start';
+    spBtn.className = 'btn btn-green';
+  }
+
+  // Preset highlights
+  document.querySelectorAll('.preset').forEach(btn => {
+    btn.classList.toggle('active', Number(btn.dataset.s) === s.timer.duration);
+  });
+
+  // Voting
+  const vOpen = s.voting.open;
+  const vsEl = document.getElementById('voteStatus');
+  vsEl.textContent = vOpen
+    ? `🟢 Voting Open — ${s.voting.total} vote${s.voting.total !== 1 ? 's' : ''} cast`
+    : `🔴 Voting Closed`;
+  vsEl.className = `vote-status ${vOpen ? 'open' : 'closed'}`;
+
+  const vtBtn = document.getElementById('voteToggleBtn');
+  vtBtn.textContent = vOpen ? '🔒 Close Voting' : '🗳️ Open Voting';
+  vtBtn.className = vOpen ? 'btn btn-red' : 'btn btn-green';
+
+  const vgEl = document.getElementById('voteGrid');
+  vgEl.innerHTML = '';
+  const total = s.voting.total || 0;
+  s.players.forEach((p, i) => {
+    const pct = total > 0 ? Math.round((s.voting.votes[i] / total) * 100) : 0;
+    const item = document.createElement('div');
+    item.className = 'vote-item';
+    item.innerHTML = `
+      <div class="vote-dot" style="background:${p.color}"></div>
+      <span class="vote-name">${esc(p.name)}</span>
+      <span class="vote-num" style="color:${p.color}">${s.voting.votes[i]}<span style="font-size:0.65rem;font-weight:400;color:#666"> (${pct}%)</span></span>
+    `;
+    vgEl.appendChild(item);
+  });
+
+  // Voter URL
+  const url = `http://${location.hostname}:${location.port}/vote.html`;
+  document.getElementById('voterUrl').textContent = url;
+  document.getElementById('voterUrlBar').textContent = `Voter: ${url}`;
+}
+
+function buildPlayerRow(p, i) {
+  return `
+    <div class="swatch" style="background:${p.color}"></div>
+    <input class="name-input" value="${esc(p.name)}"
+      oninput="send({type:'SET_PLAYER_NAME',index:${i},name:this.value})"
+      onchange="send({type:'SET_PLAYER_NAME',index:${i},name:this.value})">
+    <button class="sc-btn minus" onclick="send({type:'ADJUST_SCORE',index:${i},delta:-1})">−</button>
+    <div class="score-val" style="color:${p.color}">${p.score}</div>
+    <button class="sc-btn plus"  onclick="send({type:'ADJUST_SCORE',index:${i},delta:1})">+</button>
+  `;
+}
+
+// ── Actions ────────────────────────────────────────────────────────────────────
+function setQuestion() {
+  send({ type: 'SET_QUESTION', question: document.getElementById('qInput').value });
+}
+function clearQuestion() {
+  document.getElementById('qInput').value = '';
+  send({ type: 'SET_QUESTION', question: '' });
+}
+function setDur(s) { send({ type: 'SET_TIMER_DURATION', duration: s }); }
+function applyCustom() {
+  const v = parseInt(document.getElementById('customSec').value);
+  if (v >= 5 && v <= 600) setDur(v);
+}
+function toggleTimer() {
+  send({ type: state?.timer?.running ? 'PAUSE_TIMER' : 'START_TIMER' });
+}
+function toggleVoting() {
+  send({ type: state?.voting?.open ? 'CLOSE_VOTING' : 'OPEN_VOTING' });
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+connect();
+</script>
+</body>
+</html>
