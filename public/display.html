@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Are You Smarter Than an AI Chat Bot – Display</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #08081a;
+    background: #0d0020;
     color: #fff;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
     height: 100vh;
@@ -16,6 +17,23 @@
     display: flex;
     flex-direction: column;
     position: relative;
+  }
+
+  /* Purple radial glow + diagonal lines to match logo background */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 20% 0%,   rgba(120,0,255,0.22) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 100%, rgba(0,200,255,0.14)  0%, transparent 55%),
+      radial-gradient(ellipse at 50% 50%,  rgba(80,0,180,0.10)   0%, transparent 70%);
+  }
+  body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      repeating-linear-gradient(-45deg, transparent, transparent 58px, rgba(0,210,255,0.025) 58px, rgba(0,210,255,0.025) 59px),
+      repeating-linear-gradient( 45deg, transparent, transparent 78px, rgba(140,0,255,0.025) 78px, rgba(140,0,255,0.025) 79px);
   }
 
   /* ── Animated background stars ── */
@@ -45,27 +63,28 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 28px;
-    background: linear-gradient(135deg, rgba(20,20,50,0.95), rgba(8,8,26,0.95));
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    backdrop-filter: blur(4px);
+    padding: 10px 28px;
+    background: linear-gradient(135deg, rgba(50,0,100,0.97), rgba(13,0,32,0.97));
+    border-bottom: 1px solid rgba(140,0,255,0.3);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 2px 30px rgba(100,0,255,0.2);
   }
 
   .game-title {
-    font-size: clamp(1.1rem, 2.2vw, 1.8rem);
-    font-weight: 900;
-    letter-spacing: 4px;
+    font-family: 'Bangers', cursive;
+    font-size: clamp(1.6rem, 3vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: 3px;
     text-transform: uppercase;
-    background: linear-gradient(90deg, #a78bfa, #60a5fa, #34d399, #fbbf24);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    background-size: 200%;
-    animation: shimmer 4s linear infinite;
-  }
-  @keyframes shimmer {
-    0% { background-position: 0% }
-    100% { background-position: 200% }
+    color: #fff;
+    text-shadow:
+      3px  3px 0 #990000,
+      -2px -2px 0 #990000,
+       2px -2px 0 #990000,
+      -2px  2px 0 #990000,
+       0px  3px 0 #770000,
+       0    0  18px rgba(255,200,255,0.4);
+    line-height: 1;
   }
 
   /* Timer section */
@@ -144,17 +163,19 @@
     top: 12px;
     left: 50%;
     transform: translateX(-50%) translateY(-80px);
-    background: linear-gradient(135deg, #2ed573, #00c8ff);
-    color: #000;
-    font-weight: 900;
-    font-size: clamp(0.7rem, 1.4vw, 1rem);
-    letter-spacing: 2px;
+    background: linear-gradient(135deg, #00d4ff, #8800ff);
+    color: #fff;
+    font-family: 'Bangers', cursive;
+    font-weight: 400;
+    font-size: clamp(0.9rem, 1.8vw, 1.4rem);
+    letter-spacing: 3px;
     text-transform: uppercase;
-    padding: 7px 24px;
+    padding: 7px 28px;
     border-radius: 40px;
     white-space: nowrap;
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: none;
+    box-shadow: 0 0 30px rgba(0,200,255,0.5), 0 0 60px rgba(140,0,255,0.3);
   }
   .vote-banner.show {
     transform: translateX(-50%) translateY(0);
@@ -167,22 +188,34 @@
 
   .q-label {
     font-size: 0.7rem;
-    color: #333;
+    color: rgba(140,0,255,0.5);
     text-transform: uppercase;
     letter-spacing: 3px;
     margin-bottom: 14px;
   }
   .q-text {
-    font-size: clamp(1.4rem, 3.5vw, 2.8rem);
-    font-weight: 700;
+    font-family: 'Bangers', cursive;
+    font-size: clamp(1.8rem, 4.5vw, 3.8rem);
+    font-weight: 400;
     text-align: center;
-    line-height: 1.35;
-    max-width: 880px;
+    line-height: 1.2;
+    max-width: 900px;
+    letter-spacing: 2px;
     transition: opacity 0.4s;
-    color: #f0f0ff;
-    text-shadow: 0 2px 30px rgba(180,180,255,0.15);
+    color: #fff;
+    text-shadow:
+      2px  2px 0 #660088,
+      -1px -1px 0 #660088,
+       1px -1px 0 #660088,
+      -1px  1px 0 #660088,
+       0    0  25px rgba(200,100,255,0.35);
   }
-  .q-text.empty { color: #252540; font-style: italic; font-size: clamp(1rem, 2vw, 1.6rem); font-weight: 400; }
+  .q-text.empty {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: #2a0050; font-style: italic;
+    font-size: clamp(1rem, 2vw, 1.6rem); font-weight: 400;
+    text-shadow: none; letter-spacing: 0;
+  }
 
   /* ── Players section ── */
   .players {
@@ -192,16 +225,18 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     padding: 10px 16px 16px;
+    background: linear-gradient(to top, rgba(20,0,40,0.7), transparent);
   }
 
   .p-card {
-    background: #0e0e24;
+    background: rgba(20,0,45,0.85);
     border-radius: 16px;
-    border: 1.5px solid rgba(255,255,255,0.05);
+    border: 1.5px solid rgba(140,0,255,0.15);
     padding: 14px 14px 12px;
     position: relative;
     overflow: hidden;
     transition: box-shadow 0.3s, border-color 0.3s;
+    backdrop-filter: blur(4px);
   }
   .p-card::before {
     content: '';
@@ -212,8 +247,10 @@
   }
 
   .p-name {
-    font-size: clamp(0.85rem, 1.8vw, 1.3rem);
-    font-weight: 800;
+    font-family: 'Bangers', cursive;
+    font-size: clamp(1.1rem, 2.2vw, 1.8rem);
+    font-weight: 400;
+    letter-spacing: 2px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -298,8 +335,8 @@
     top: 50%;
     transform: translateY(-50%) translateX(300px);
     z-index: 10;
-    background: rgba(8,8,26,0.97);
-    border: 2px solid #2ed573;
+    background: rgba(13,0,32,0.97);
+    border: 2px solid #00d4ff;
     border-radius: 22px;
     padding: 20px 18px 16px;
     display: flex;
@@ -316,15 +353,17 @@
     animation: qrGlow 2.5s ease-in-out infinite;
   }
   @keyframes qrGlow {
-    0%, 100% { border-color: #2ed573; box-shadow: 0 0 30px rgba(46,213,115,0.25); }
-    50%       { border-color: #60a5fa; box-shadow: 0 0 50px rgba(96,165,250,0.3); }
+    0%, 100% { border-color: #00d4ff; box-shadow: 0 0 30px rgba(0,212,255,0.3); }
+    50%       { border-color: #aa00ff; box-shadow: 0 0 50px rgba(170,0,255,0.35); }
   }
   .vqr-label {
-    font-size: 0.75rem;
-    font-weight: 900;
-    color: #2ed573;
-    letter-spacing: 3px;
+    font-family: 'Bangers', cursive;
+    font-size: 1rem;
+    font-weight: 400;
+    color: #00d4ff;
+    letter-spacing: 4px;
     text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(0,212,255,0.6);
   }
   #qrLarge canvas, #qrLarge img {
     width: 200px !important;
@@ -412,7 +451,7 @@ try {
     text: voterURL,
     width: 58, height: 58,
     colorDark: '#ffffff',
-    colorLight: '#08081a',
+    colorLight: '#0d0020',
     correctLevel: QRCode.CorrectLevel.M,
   });
 } catch(e) {}
@@ -427,7 +466,7 @@ function initLargeQr() {
       text: voterURL,
       width: 200, height: 200,
       colorDark: '#ffffff',
-      colorLight: '#08081a',
+      colorLight: '#0d0020',
       correctLevel: QRCode.CorrectLevel.M,
     });
     document.getElementById('vqrUrl').textContent = voterURL;
